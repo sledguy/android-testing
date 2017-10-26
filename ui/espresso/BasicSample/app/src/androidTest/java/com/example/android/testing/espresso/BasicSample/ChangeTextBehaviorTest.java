@@ -34,6 +34,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyAbove;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
@@ -83,8 +84,10 @@ public class ChangeTextBehaviorTest {
      //   onView(withId(R.id.textToBeChanged)).check(matches(withText(R.string.hello_world)));
      //   onView(withId(R.id.textToBeChanged)).check(matches(isDisplayed()));
      //   onView(withId(R.id.textToBeChanged)).check(matches(not(isClickable())));
-        onView(allOf(withId(R.id.textToBeChanged), withText(R.string.hello_world),
-                isDisplayed())).check(matches(not(isClickable())));
+        onView(withId(R.id.textToBeChanged))
+                .check(matches(not(isClickable())))
+                .check(matches(withText((R.string.hello_world))))
+                .check(matches(isDisplayed()));
     }
 
     @Test
@@ -96,13 +99,26 @@ public class ChangeTextBehaviorTest {
     @Test
     public void checkChangeTextButton() {
         // Check the Change text button
-        onView(allOf(withId(R.id.changeTextBt), withText(R.string.change_text))).
-                check(matches(isClickable()));
+        onView(withId(R.id.changeTextBt))
+               .check(matches(isClickable())).check(matches(withText(R.string.change_text)));
+    }
+
+    @Test
+    public void checkRelativeElementPositions() {
+        // Check that the elements are stacked in the correct order
+        onView(withId(R.id.textToBeChanged))
+                .check(isCompletelyAbove(withId(R.id.editTextUserInput)));
+        onView(withId(R.id.editTextUserInput))
+                .check(isCompletelyAbove(withId(R.id.changeTextBt)));
+        onView(withId(R.id.changeTextBt))
+                .check(isCompletelyAbove(withId(R.id.activityChangeTextBtn)));
     }
 
     @Test
     public void changeText_sameActivity() {
-        // Type text and then press the button.
+        // Replace text and then press the button.
+        onView(withId(R.id.editTextUserInput))
+                .perform(replaceText(STRING_TO_BE_TYPED));
         onView(withId(R.id.editTextUserInput))
                 .perform(replaceText(STRING_TO_BE_TYPED));
         onView(withId(R.id.changeTextBt)).perform(click());
@@ -115,11 +131,13 @@ public class ChangeTextBehaviorTest {
     public void typeText_sameActivity() {
         // Type text and then press the button.
         onView(withId(R.id.editTextUserInput))
+                .perform(typeText(STRING_TO_BE_TYPED));
+        onView(withId(R.id.editTextUserInput))
                 .perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
         onView(withId(R.id.changeTextBt)).perform(click());
 
         // Check that the text was changed.
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED)));
+        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED + STRING_TO_BE_TYPED)));
     }
 
     @Test
