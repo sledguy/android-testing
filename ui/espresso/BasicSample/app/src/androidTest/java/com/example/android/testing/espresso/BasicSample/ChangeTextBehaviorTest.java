@@ -22,27 +22,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.filters.LargeTest;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.Button;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNot.not;
 
 
@@ -74,7 +72,7 @@ public class ChangeTextBehaviorTest {
             MainActivity.class);
 
     @Test
-    public void checkAppWindow() {
+    public void checkToolbarTitle() {
         // Check the app window title
         onView(withText(R.string.app_name)).check(matches(isDisplayed()));
     }
@@ -82,31 +80,31 @@ public class ChangeTextBehaviorTest {
     @Test
     public void checkTextField() {
         // Check the text field for default values
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(R.string.hello_world)));
-        onView(withId(R.id.textToBeChanged)).check(matches(isDisplayed()));
-        onView(withId(R.id.textToBeChanged)).check(matches(not(isClickable())));
+     //   onView(withId(R.id.textToBeChanged)).check(matches(withText(R.string.hello_world)));
+     //   onView(withId(R.id.textToBeChanged)).check(matches(isDisplayed()));
+     //   onView(withId(R.id.textToBeChanged)).check(matches(not(isClickable())));
+        onView(allOf(withId(R.id.textToBeChanged), withText(R.string.hello_world),
+                isDisplayed())).check(matches(not(isClickable())));
     }
 
     @Test
     public void checkTextEntryField() {
         // Check the text entry field for default values
-        onView(withId(R.id.editTextUserInput)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextUserInput)).check(matches(hasFocus()));
-
+        onView(allOf(withId(R.id.editTextUserInput), isDisplayed())).check(matches(hasFocus()));
     }
 
     @Test
     public void checkChangeTextButton() {
         // Check the Change text button
-        onView(withId(R.id.changeTextBt)).check(matches(withText(R.string.change_text)));
-        onView(withId(R.id.changeTextBt)).check(matches(isClickable()));
+        onView(allOf(withId(R.id.changeTextBt), withText(R.string.change_text))).
+                check(matches(isClickable()));
     }
 
     @Test
     public void changeText_sameActivity() {
         // Type text and then press the button.
         onView(withId(R.id.editTextUserInput))
-                .perform(replaceText(STRING_TO_BE_TYPED), closeSoftKeyboard());
+                .perform(replaceText(STRING_TO_BE_TYPED));
         onView(withId(R.id.changeTextBt)).perform(click());
 
         // Check that the text was changed.
