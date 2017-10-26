@@ -94,14 +94,16 @@ public class ChangeTextBehaviorTest {
     @Test
     public void checkTextEntryField_mainActivity() {
         // Check the text entry field for default values
-        onView(allOf(withId(R.id.editTextUserInput), isDisplayed())).check(matches(hasFocus()));
+        onView(allOf(withId(R.id.editTextUserInput), isDisplayed()))
+                .check(matches(hasFocus()));
     }
 
     @Test
     public void checkChangeTextButton_mainActivity() {
         // Check the Change text button
         onView(withId(R.id.changeTextBt))
-               .check(matches(isClickable())).check(matches(withText(R.string.change_text)));
+                .check(matches(isClickable()))
+                .check(matches(withText(R.string.change_text)));
     }
 
     @Test
@@ -125,7 +127,8 @@ public class ChangeTextBehaviorTest {
         onView(withId(R.id.changeTextBt)).perform(click());
 
         // Check that the text was changed.
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED)));
+        onView(withId(R.id.textToBeChanged))
+                .check(matches(withText(STRING_TO_BE_TYPED)));
     }
 
     @Test
@@ -135,10 +138,12 @@ public class ChangeTextBehaviorTest {
                 .perform(typeText(STRING_TO_BE_TYPED));
         onView(withId(R.id.editTextUserInput))
                 .perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
-        onView(withId(R.id.changeTextBt)).perform(click());
+        onView(withId(R.id.changeTextBt))
+                .perform(click());
 
         // Check that the text was changed.
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED + STRING_TO_BE_TYPED)));
+        onView(withId(R.id.textToBeChanged))
+                .check(matches(withText(STRING_TO_BE_TYPED + STRING_TO_BE_TYPED)));
     }
 
     @Test
@@ -148,23 +153,25 @@ public class ChangeTextBehaviorTest {
                 .perform(typeTextIntoFocusedView(STRING_TO_BE_TYPED));
         onView(withId(R.id.editTextUserInput))
                 .perform(typeTextIntoFocusedView(STRING_TO_BE_TYPED), closeSoftKeyboard());
-        onView(withId(R.id.changeTextBt)).perform(click());
+        onView(withId(R.id.changeTextBt))
+                .perform(click());
 
         // Check that the text was changed.
-        onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED + STRING_TO_BE_TYPED)));
+        onView(withId(R.id.textToBeChanged))
+                .check(matches(withText(STRING_TO_BE_TYPED + STRING_TO_BE_TYPED)));
     }
 
     @Test
     public void changeText_showTextActivity() {
         // Type text and then press the button.
-        onView(withId(R.id.editTextUserInput)).perform(typeText(STRING_TO_BE_TYPED),
-                closeSoftKeyboard());
-        onView(withId(R.id.activityChangeTextBtn)).perform(click());
+        onView(withId(R.id.editTextUserInput))
+                .perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
+        onView(withId(R.id.activityChangeTextBtn))
+                .perform(click());
 
         // This view is in a different Activity, no need to tell Espresso.
-        onView(withId(R.id.show_text_view)).check(matches(withText(STRING_TO_BE_TYPED)));
+        onView(withId(R.id.show_text_view))
+                .check(matches(withText(STRING_TO_BE_TYPED)));
     }
-
-
 
 }
