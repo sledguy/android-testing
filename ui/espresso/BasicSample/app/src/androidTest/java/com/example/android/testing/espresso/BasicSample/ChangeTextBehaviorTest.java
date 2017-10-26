@@ -57,6 +57,7 @@ import static org.hamcrest.core.IsNot.not;
 public class ChangeTextBehaviorTest {
 
     public static final String STRING_TO_BE_TYPED = "Espresso Dan";
+    public static final String MULTILINE_STRING_TO_TYPE = "Espresso Dan 1 \n Espresso Dan 2";
 
     /**
      * A JUnit {@link Rule @Rule} to launch your activity under test. This is a replacement
@@ -162,16 +163,57 @@ public class ChangeTextBehaviorTest {
     }
 
     @Test
-    public void changeText_showTextActivity() {
+    public void typeText_showTextActivity() {
         // Type text and then press the button.
         onView(withId(R.id.editTextUserInput))
-                .perform(typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
+                .perform(typeText(MULTILINE_STRING_TO_TYPE));
+        onView(withId(R.id.editTextUserInput))
+                .perform(typeText(MULTILINE_STRING_TO_TYPE), closeSoftKeyboard());
         onView(withId(R.id.activityChangeTextBtn))
                 .perform(click());
 
         // This view is in a different Activity, no need to tell Espresso.
         onView(withId(R.id.show_text_view))
-                .check(matches(withText(STRING_TO_BE_TYPED)));
+                .check(matches(withText(MULTILINE_STRING_TO_TYPE + MULTILINE_STRING_TO_TYPE)));
+        onView(withText(R.string.app_name))
+                .check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void replaceText_showTextActivity() {
+        // Replace text and then press the button.
+        onView(withId(R.id.editTextUserInput))
+                .perform(replaceText(MULTILINE_STRING_TO_TYPE), closeSoftKeyboard());
+        onView(withId(R.id.editTextUserInput))
+                .perform(replaceText(MULTILINE_STRING_TO_TYPE), closeSoftKeyboard());
+        onView(withId(R.id.activityChangeTextBtn))
+                .perform(click());
+
+        // This view is in a different Activity, no need to tell Espresso.
+        onView(withId(R.id.show_text_view))
+                .check(matches(withText(MULTILINE_STRING_TO_TYPE)));
+        onView(withText(R.string.app_name))
+                .check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void typeFocusedText_showTextActivity() {
+        // Replace text and then press the button.
+        onView(withId(R.id.editTextUserInput))
+                .perform(typeTextIntoFocusedView(MULTILINE_STRING_TO_TYPE), closeSoftKeyboard());
+        onView(withId(R.id.editTextUserInput))
+                .perform(typeTextIntoFocusedView(MULTILINE_STRING_TO_TYPE), closeSoftKeyboard());
+        onView(withId(R.id.activityChangeTextBtn))
+                .perform(click());
+
+        // This view is in a different Activity, no need to tell Espresso.
+        onView(withId(R.id.show_text_view))
+                .check(matches(withText(MULTILINE_STRING_TO_TYPE + MULTILINE_STRING_TO_TYPE)));
+        onView(withText(R.string.app_name))
+                .check(matches(isDisplayed()));
+
     }
 
 }
